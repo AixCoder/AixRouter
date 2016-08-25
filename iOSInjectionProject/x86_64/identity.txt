@@ -1,0 +1,2 @@
+/Users/liuhongnian/Library/Developer/Xcode/DerivedData/AixRouter-gqwubqehnhyfpsbxbovvioaehlan/Build/Products/Debug-iphonesimulator/AixRouter.app
+
