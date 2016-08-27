@@ -22,5 +22,23 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
         </scene>
+        <!--User View Controller-->
+        <scene sceneID="f04-Bo-DeA">
+            <objects>
+                <viewController storyboardIdentifier="UserViewController" id="Ob4-Qi-VKa" customClass="UserViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="xqP-Sx-EWq"/>
+                        <viewControllerLayoutGuide type="bottom" id="ci4-58-ZXg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="bjL-x1-gjj">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UXX-PD-NNE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="959" y="327"/>
+        </scene>
     </scenes>
 </document>

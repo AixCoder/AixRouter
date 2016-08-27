@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "AixRouter.h"
 #import "ViewController.h"
+#import "UserViewController.h"
 
 @interface AppDelegate ()
 
@@ -22,16 +23,14 @@
     
     [[AixRouter sharedInstance]mapUrl:@"/test/:uid"
                          toController:[ViewController class]];
-    [[AixRouter sharedInstance] mapUrl:@"/test" toController:[UIViewController class]];
-    [[AixRouter sharedInstance] mapUrl:@"/test/id" toController:[UIView class]];
     
-    [[AixRouter sharedInstance]matchViewController:@"/te"];
+    [[AixRouter sharedInstance]matchViewController:@"/test/123"];
     
-    //将/details/:newsID 网址 映射到DetailsPage类（新闻详情页页面）
-    [[AixRouter sharedInstance] mapUrl:@"/details/:newsID" toController:[DetailsPage Class]];
+    [[AixRouter sharedInstance] mapUrl:@"/user/:user_id" toController:[UserViewController class]];
     
-    //根据URL网址匹配到新闻详情页,123是参数(newsID=123)，
-    [[AixRouter sharedInstance] matchViewController:@"/details/123"];
+    UIViewController *user_vc = [[AixRouter sharedInstance] matchViewController:@"/user/1"];
+    
+    self.window.rootViewController = user_vc;
     
     return YES;
 }

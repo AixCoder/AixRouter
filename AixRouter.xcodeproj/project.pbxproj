@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F616AD361D6D6F2700A2F393 /* AixRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = F616AD351D6D6F2700A2F393 /* AixRouter.m */; };
+		F6EC0C941D6F26BF002FC07F /* UserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EC0C931D6F26BF002FC07F /* UserViewController.m */; };
 		F6F19C5F1D6C423400500E4C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F6F19C5E1D6C423400500E4C /* main.m */; };
 		F6F19C621D6C423400500E4C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6F19C611D6C423400500E4C /* AppDelegate.m */; };
 		F6F19C651D6C423400500E4C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6F19C641D6C423400500E4C /* ViewController.m */; };
@@ -19,6 +20,8 @@
 /* Begin PBXFileReference section */
 		F616AD341D6D6F2700A2F393 /* AixRouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AixRouter.h; sourceTree = "<group>"; };
 		F616AD351D6D6F2700A2F393 /* AixRouter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AixRouter.m; sourceTree = "<group>"; };
+		F6EC0C921D6F26BF002FC07F /* UserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserViewController.h; sourceTree = "<group>"; };
+		F6EC0C931D6F26BF002FC07F /* UserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserViewController.m; sourceTree = "<group>"; };
 		F6F19C5A1D6C423400500E4C /* AixRouter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AixRouter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6F19C5E1D6C423400500E4C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F6F19C601D6C423400500E4C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -65,6 +68,8 @@
 				F6F19C611D6C423400500E4C /* AppDelegate.m */,
 				F6F19C631D6C423400500E4C /* ViewController.h */,
 				F6F19C641D6C423400500E4C /* ViewController.m */,
+				F6EC0C921D6F26BF002FC07F /* UserViewController.h */,
+				F6EC0C931D6F26BF002FC07F /* UserViewController.m */,
 				F616AD341D6D6F2700A2F393 /* AixRouter.h */,
 				F616AD351D6D6F2700A2F393 /* AixRouter.m */,
 				F6F19C661D6C423400500E4C /* Main.storyboard */,
@@ -155,6 +160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6F19C651D6C423400500E4C /* ViewController.m in Sources */,
+				F6EC0C941D6F26BF002FC07F /* UserViewController.m in Sources */,
 				F616AD361D6D6F2700A2F393 /* AixRouter.m in Sources */,
 				F6F19C621D6C423400500E4C /* AppDelegate.m in Sources */,
 				F6F19C5F1D6C423400500E4C /* main.m in Sources */,

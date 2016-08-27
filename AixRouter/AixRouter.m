@@ -8,7 +8,6 @@
 
 #import "AixRouter.h"
 #import <objc/runtime.h>
-@import UIKit;
 
 @interface AixRouter ()
 
@@ -65,6 +64,9 @@
         viewController = [self controllerForParams:params];
         _cacheRouters[url] = params;
     }else{
+        /**
+         *  未匹配到对应的uiviewcontroller，注意URL有没有填写错误
+         */
         NSAssert(0, @"URL未匹配成功,");
     }
     return viewController;
@@ -102,6 +104,12 @@
     NSMutableDictionary *params = @{}.mutableCopy;
     
     __block BOOL find = NO;
+    //循环匹配routerURLKeys是每次注册的URL例如/user/:uid
+    /*
+     routerURLKeys是每次注册的URL例如/user/:uid
+     将routerURLKeys的每一个元素提取到数组里和pathComponents中每个元素尝试配对，
+     如果两个元素相等就继续下一个循环匹配，如果元素以:开头就提取出来作为参数
+     */
     for (NSString *routerUrl in routerURLKeys) {
         
         NSArray *routerComponents = [self pathComponentsFromRouterUrl:routerUrl];
@@ -149,16 +157,40 @@
             if([controllerClass respondsToSelector:CLASS_SEL]){
                 
                 viewController = [controllerClass performSelector:CLASS_SEL withObject:routerParams];
+                [viewController setRouterParams:routerParams];
+                
             }else if ([controllerClass instancesRespondToSelector:INSTANCE_SEL]){
                 viewController = [controllerClass performSelector:INSTANCE_SEL withObject:routerParams];
+                [viewController setRouterParams:routerParams];
+
             }else{
                 viewController = [[controllerClass alloc] init];
+                [viewController setRouterParams:routerParams];
             }
 
+        }else{
+            //- (void)mapUrl:(NSString *)routerUrl toController:(Class)controllerClass;调用这个消息的传入的class必须是UIViewController
+            NSAssert(0, @"未找到对应的UIViewController类");
         }
     }
 #pragma clang diagnostic pop
     return viewController;
+}
+
+@end
+
+@implementation UIViewController (AixRouter)
+
+static char associatedParamsKey;
+
+- (void)setRouterParams:(NSDictionary *)routerParams
+{
+    objc_setAssociatedObject(self, &associatedParamsKey, routerParams, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSDictionary *)routerParams
+{
+    return  objc_getAssociatedObject(self, &associatedParamsKey);
 }
 
 @end
