@@ -43,23 +43,20 @@
 
 - (void)mapUrl:(NSString *)routerUrl toController:(Class)controllerClass
 {
-    NSDictionary *param = @{@"UIViewControllerClass":controllerClass};
-    
-    _routers[routerUrl] = param;
-    
+    _routers[routerUrl] = @{@"__":controllerClass};
+}
+
+- (void)mapUrl:(NSString *)routerUrl toBlock:(AixRouterBlock)routerBlock
+{
+
+    _routers[routerUrl] = @{@"__":[routerBlock copy]};
 }
 
 - (UIViewController *)matchViewController:(NSString *)url
 {
     UIViewController *viewController;
     
-    NSArray *pathComponents = [self pathComponentsFromRouterUrl:url];
-    
-    NSDictionary *params = self.cacheRouters[url];
-    if (!params) {
-        params = [self paramsFromPathComponents:pathComponents];
-    }
-    //根据参数生成viewcontroller
+     NSDictionary * params = [self paramsForRouterUrl:url];
     if (params) {
         viewController = [self controllerForParams:params];
         _cacheRouters[url] = params;
@@ -72,9 +69,48 @@
     return viewController;
 }
 
+- (NSDictionary *)paramsForRouterUrl:(NSString *)url
+{
+    //过滤schemaURL and https开头的university links
+    NSString *URL = [self filterAppSchemeUrl:url];
+    
+    NSArray *pathComponents = [self pathComponentsFromRouterUrl:URL];
+    
+    NSDictionary *params = self.cacheRouters[url];
+    
+    if (!params) {
+        params = [self paramsFromPathComponents:pathComponents];
+    }
+    
+    return params;
+}
+
+- (NSString *)filterAppSchemeUrl:(NSString *)url
+{
+    NSMutableArray *schemeUrls = [NSMutableArray array];
+    NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
+    
+    for (NSDictionary *dic in infoDic[@"CFBundleURLTypes"]) {
+        NSArray *CFBundleURLSchemes = dic[@"CFBundleURLSchemes"];
+        NSString *appSchemeUrl = CFBundleURLSchemes.firstObject;
+        [schemeUrls addObject:appSchemeUrl];
+    }
+    
+    for (NSString *appScheme in schemeUrls) {
+        
+        if ([url hasPrefix:appScheme]) {
+            return [url substringFromIndex:appScheme.length + 2];
+        }
+    }
+    
+    return url;
+}
+
 - (NSArray *)pathComponentsFromRouterUrl:(NSString *)routerUrl
 {
     NSMutableArray *pathComponents = @[].mutableCopy;
+    
+    routerUrl = [self filterAppSchemeUrl:routerUrl];
     
     NSURL *pathURL = [NSURL URLWithString:[routerUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
@@ -132,8 +168,18 @@
         //匹配成功了就停止继续循环匹配
         if (YES == find)
         {
-            Class controllerClass = _routers[routerUrl][@"UIViewControllerClass"];
-            params[@"viewController_class"] = controllerClass;
+            
+            Class class = _routers[routerUrl][@"__"];
+            if (class_isMetaClass(object_getClass(class))) {
+                if ([class isSubclassOfClass:[UIViewController class]]) {
+                    params[@"viewController_class"] = class;
+                }
+            }else if (_routers[routerUrl][@"__"]){
+                
+                params[@"urlBlock"] = [_routers[routerUrl][@"__"] copy];
+            }else{
+                NSLog(@"未指定viewcontrollerClass或block");
+            }
             break;
         }
         
@@ -155,26 +201,48 @@
     if (class_isMetaClass(object_getClass(controllerClass))) {
         if ([controllerClass isSubclassOfClass:[UIViewController class]]) {
             if([controllerClass respondsToSelector:CLASS_SEL]){
-                
+                //storyboard文件初始化
                 viewController = [controllerClass performSelector:CLASS_SEL withObject:routerParams];
                 [viewController setRouterParams:routerParams];
                 
             }else if ([controllerClass instancesRespondToSelector:INSTANCE_SEL]){
+                //aix_initWithParams
                 viewController = [controllerClass performSelector:INSTANCE_SEL withObject:routerParams];
                 [viewController setRouterParams:routerParams];
 
             }else{
+                //nib加载viewcontroller
                 viewController = [[controllerClass alloc] init];
                 [viewController setRouterParams:routerParams];
             }
 
         }else{
-            //- (void)mapUrl:(NSString *)routerUrl toController:(Class)controllerClass;调用这个消息的传入的class必须是UIViewController
+            
             NSAssert(0, @"未找到对应的UIViewController类");
         }
     }
 #pragma clang diagnostic pop
     return viewController;
+}
+
+- (AixRouterBlock)matchBlock:(NSString *)url
+{
+    NSDictionary *params = [self paramsForRouterUrl:url];
+    
+    AixRouterBlock returnBlock = params[@"urlBlock"] ? params[@"urlBlock"] : nil;
+
+    return returnBlock;
+}
+
+- (void)callBlockWithRouterUrl:(NSString *)url
+{
+    NSDictionary *params = [self paramsForRouterUrl:url];
+    
+    AixRouterBlock block = params[@"urlBlock"];
+    
+    if (block) {
+        block(params);
+    }
 }
 
 @end

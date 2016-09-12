@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 @import UIKit;
 
+typedef id(^AixRouterBlock)(NSDictionary *params);
+
 @interface AixRouter : NSObject
 
 + (instancetype)sharedInstance;
@@ -29,6 +31,13 @@
  *  @return 
  */
 - (UIViewController *)matchViewController:(NSString*)url;
+
+
+- (void)mapUrl:(NSString *)routerUrl toBlock:(AixRouterBlock)routerBlock;
+
+- (AixRouterBlock)matchBlock:(NSString *)url;
+
+- (void)callBlockWithRouterUrl:(NSString *)url;
 
 @end
 

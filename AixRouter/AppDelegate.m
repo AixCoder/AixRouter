@@ -30,6 +30,20 @@
     
     UIViewController *user_vc = [[AixRouter sharedInstance] matchViewController:@"/user/1"];
     
+    
+//    [[AixRouter sharedInstance] mapUrl:@"aixrouter://story/:storyid" toBlock:^id(NSDictionary *params) {
+//
+//        NSLog(@"block call success");
+//        return @"";
+//    }];
+    
+    [[AixRouter sharedInstance] mapUrl:@"https://cz001.com/story/:sid" toBlock:^id(NSDictionary *params) {
+        
+        NSLog(@"block called ");
+        return @"";
+    }];
+    
+    
     self.window.rootViewController = user_vc;
     
     return YES;
@@ -55,6 +69,12 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
+{
+    [[AixRouter sharedInstance] callBlockWithRouterUrl:@"https://cz001.com/story/90"];
+    return YES;
 }
 
 @end
