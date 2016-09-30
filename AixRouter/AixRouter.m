@@ -71,15 +71,34 @@
 
 - (NSDictionary *)paramsForRouterUrl:(NSString *)url
 {
-    //过滤schemaURL and https开头的university links
+    //过滤schemaURL
     NSString *URL = [self filterAppSchemeUrl:url];
     
     NSArray *pathComponents = [self pathComponentsFromRouterUrl:URL];
     
-    NSDictionary *params = self.cacheRouters[url];
+    NSMutableDictionary *params = [self.cacheRouters[url] mutableCopy];
     
     if (!params) {
-        params = [self paramsFromPathComponents:pathComponents];
+        params = [self paramsFromPathComponents:pathComponents].mutableCopy;
+    }
+    
+    NSRange queryRange = [URL rangeOfString:@"?"];
+    if (queryRange.location != NSNotFound &&
+        URL.length > (queryRange.location + queryRange.length)) {
+        
+        NSString *subParamsString = [URL substringFromIndex:queryRange.location + queryRange.length];
+        
+        NSArray *subParamsArray = [subParamsString componentsSeparatedByString:@"&"];
+        for (NSString *singleParam in subParamsArray) {
+            
+            NSArray *keyAndValue = [singleParam componentsSeparatedByString:@"="];
+            if (keyAndValue.count == 2) {
+                NSString *key = keyAndValue[0];
+                NSString *value = keyAndValue[1];
+                
+                params[key] = value;
+            }
+        }
     }
     
     return params;
@@ -243,6 +262,17 @@
     if (block) {
         block(params);
     }
+}
+
+- (BOOL)canRoute:(NSString *)routeURL
+{
+    NSDictionary *params = [self paramsForRouterUrl:routeURL];
+    
+    if (params) {
+        return YES;
+    }
+    
+    return NO;
 }
 
 @end

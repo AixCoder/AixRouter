@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 @import UIKit;
 
-typedef id(^AixRouterBlock)(NSDictionary *params);
+typedef void(^AixRouterBlock)(NSDictionary *params);
 
 @interface AixRouter : NSObject
 
@@ -34,10 +34,10 @@ typedef id(^AixRouterBlock)(NSDictionary *params);
 
 
 - (void)mapUrl:(NSString *)routerUrl toBlock:(AixRouterBlock)routerBlock;
-
 - (AixRouterBlock)matchBlock:(NSString *)url;
-
 - (void)callBlockWithRouterUrl:(NSString *)url;
+
+- (BOOL)canRoute:(NSString *)routeURL;
 
 @end
 
